@@ -9,8 +9,10 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        Form {
+            Text("Hello, world!")
+                .padding()
+        }
     }
 }
 
@@ -19,3 +21,6 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
+
+//Creating a form or any view, it can only fit 10 views and not 11. If using more than 10. Group them.
