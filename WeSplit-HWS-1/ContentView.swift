@@ -14,11 +14,27 @@ struct ContentView: View {
     @State private var numberOfPeople = 2
     @State private var tipPercentage = 20
     
+    //Focus is it receiving user input or not. Similar to @State property
+    @FocusState private var amountIsFocused: Bool
+    
+    
     //Creating a constant array of predetermine tip percentage to allow individuals select a certain tip percetange
     
     let tipPercentages = [0, 15, 18, 20, 30]
     
-    
+    //Computed property to calculate the bill
+    var totalPerPerson: Double {
+        let peopleCount = Double(numberOfPeople + 2)
+        let tipSelection = Double(tipPercentage)
+        
+   
+        let tipValue = checkAmount / 100 * tipSelection
+        let grandTotal = checkAmount + tipValue
+        
+        let amountPerPerson = grandTotal / peopleCount
+        
+        return amountPerPerson
+    }
     
     var body: some View {
         NavigationView {
@@ -28,6 +44,7 @@ struct ContentView: View {
                     //Pass in double as a value instead of text parameter. Also, ask the system to see what the user currency is using
                     TextField("Amount", value: $checkAmount, format: .currency(code: Locale.current.currencyCode ?? "USD"))
                         .keyboardType(.decimalPad)
+                        .focused($amountIsFocused)
                     //keyboard modifier allows the user to type in numbers with a decimal rather than the initial default keyboard
                     
                     
@@ -54,11 +71,19 @@ struct ContentView: View {
                 
                 //MARK: - Check Amount
                 Section {
-                    Text(checkAmount, format: .currency(code: Locale.current.currencyCode ?? "USD"))
+                    Text(totalPerPerson, format: .currency(code: Locale.current.currencyCode ?? "USD"))
                 }
                 
             }
             .navigationTitle("WeSplit")
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") {
+                        amountIsFocused = false
+                    }
+                }
+            }
         }
     }
 }
